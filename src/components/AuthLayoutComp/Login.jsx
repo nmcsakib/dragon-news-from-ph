@@ -1,5 +1,5 @@
 import { MdOutlineMail } from "react-icons/md";
-import { RiAccountCircleLine, RiLockPasswordLine } from "react-icons/ri";
+import { RiLockPasswordLine } from "react-icons/ri";
 import AnimatedBtn from "../AnimatedBtn";
 import { Link } from "react-router-dom";
 
@@ -9,15 +9,16 @@ const Login = () => {
                   <div className="p-8 mb-4 flex items-center flex-col gap-5 justify-center bg-white">
                     <h2 className="text-3xl mb-3">Please Login</h2>
 
-            {/* username input with icon */}
+              {/* email input with icon */}
             <div className="w-full relative">
-                <RiAccountCircleLine
+                <MdOutlineMail
                     className=" absolute top-3.5 left-3 text-[1.5rem] dark:text-slate-400 text-[#777777]"/>
                 <input
-                    type="text"
-                    name="text"
-                    id="text"
-                    placeholder="Username"
+                required
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Email address"
                     className="peer border-border  dark:placeholder:text-slate-500 dark:text-[#abc2d3] dark:border-slate-600 border rounded-md outline-none pl-10 pr-4 py-3 w-full focus:border-primary transition-colors duration-300"
                 />
             </div>
@@ -27,6 +28,7 @@ const Login = () => {
                 <RiLockPasswordLine
                     className=" absolute top-3.5 left-3 text-[1.5rem] dark:text-slate-400 text-[#777777]"/>
                 <input
+                required
                     type="password"
                     name="password"
                     id="password"
@@ -35,18 +37,7 @@ const Login = () => {
                 />
             </div>
 
-            {/* email input with icon */}
-            <div className="w-full relative">
-                <MdOutlineMail
-                    className=" absolute top-3.5 left-3 text-[1.5rem] dark:text-slate-400 text-[#777777]"/>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    placeholder="Email address"
-                    className="peer border-border  dark:placeholder:text-slate-500 dark:text-[#abc2d3] dark:border-slate-600 border rounded-md outline-none pl-10 pr-4 py-3 w-full focus:border-primary transition-colors duration-300"
-                />
-            </div>
+         
             <AnimatedBtn label={"Login"}/>
             <p className="text-md font-semibold">Dont have any account ? <Link className="text-red-500" to={"/auth/Register"}>Register</Link></p>
         </div>

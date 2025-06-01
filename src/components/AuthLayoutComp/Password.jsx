@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import {useState} from "react";
 
@@ -7,7 +8,7 @@ import {MdDone} from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import {RxCross1} from "react-icons/rx";
 
-const Password = () => {
+const Password = ({setPassword}) => {
     const [isEyeOpen, setIsEyeOpen] = useState(false);
     const [signal, setSignal] = useState({
         lowercase: false,
@@ -26,6 +27,7 @@ const Password = () => {
         const hasLowerCase = /[a-z]/.test(password);
         const hasNumber = /[0-9]/.test(password);
         const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        setPassword(e.target.value)
 
         setSignal({
             lowercase: hasLowerCase,
