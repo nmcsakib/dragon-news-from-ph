@@ -4,27 +4,53 @@ import { MdOutlineMail } from "react-icons/md";
 import { RiAccountCircleLine, RiLockPasswordLine } from "react-icons/ri";
 import PhotoInput from "./PhotoInput";
 import Password from "./Password";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import uploadToImgbb from "../../imgBBurl";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
 
 const Register = () => {
     const [password, setPassword] = useState('')
     const [profileImg, setProfileImg] = useState(null)
+    const [error, setError] = useState('')
+    const {createNewUser, setUser} = useContext(AuthContext)
 
     const handleSubmit = async (e) => {
   e.preventDefault();
-  const name = e.target.name.value;
-  const email = e.target.email.value;
-  const pass = password;
-  const rePass = e.target.rePassword.value;
+  const form = new FormData(e.target);
+  const name = form.get("name");
+  const email = form.get("email");
+  const rePass = form.get("rePassword");
+  let pass = ''
+  if(error === ''){
+    pass = password;
+  } else{
+    return
+  }
 
-  try {
+  if(profileImg){
+    try {
     const profile = await uploadToImgbb(profileImg);
-    
+
       console.log(name, email, profile, pass, rePass);
       
   } catch (error) {
     console.error("Error uploading image:", error);
+  }
+  }else{
+   createNewUser(email, pass)
+    .then(res => {
+        const user = res.user
+        setUser(user)
+        console.log(user, name, email, pass, rePass);
+        
+    })
+     .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setError(errorMessage)
+    console.log(errorCode, errorMessage);
+  });
+
   }
 };
 
@@ -96,11 +122,15 @@ const Register = () => {
                         type="password"
                         name="rePassword"
                         id="password"
+                        onChange={(e) => password === e.target.value ? setError('') : setError("Pass not matched")}
                         placeholder="Retype Password"
                         className="peer border-border  dark:placeholder:text-slate-500 dark:text-[#abc2d3] dark:border-slate-600 border rounded-md outline-none pl-10 pr-4 py-3 w-full focus:border-primary transition-colors duration-300"
                     />
                 </div>
                 <AnimatedBtn label={"Register"} />
+                {
+                    error && <p className="text-sm text-red-500">{error}</p>
+                }
                
                 <p className="text-md font-semibold">Already have any account ? <Link className="text-red-500" to={"/auth/Login"}>Login</Link></p>
             </form>

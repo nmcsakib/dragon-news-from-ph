@@ -1,12 +1,42 @@
 import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import AnimatedBtn from "../AnimatedBtn";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
 
 const Login = () => {
+    const {logIn, user, setUser} = useContext(AuthContext);
+    const [error, setError] = useState('')
+    if(user){
+        return <Navigate to={'/category/01'}/>
+    }
+
+
+    const handleSubmit = (e)=> {
+        e.preventDefault()
+        setError('')
+        const form = new FormData(e.target);
+        const email = form.get('email')
+        const pass = form.get('password')
+        logIn(email, pass)
+        .then(res => {
+        const user = res.user
+        setUser(user)
+        console.log(user, email, pass);
+
+        
+    })
+     .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setError(errorMessage)
+    console.log("ERROR", errorCode, errorMessage);
+  });
+    }
     return (
             <div className="w-1/3 min-h-screen mx-auto flex justify-center items-center">
-                  <div className="p-8 mb-4 flex items-center flex-col gap-5 justify-center bg-white">
+                  <form onSubmit={handleSubmit} className="p-8 mb-4 flex items-center flex-col gap-5 justify-center bg-white">
                     <h2 className="text-3xl mb-3">Please Login</h2>
 
               {/* email input with icon */}
@@ -36,11 +66,16 @@ const Login = () => {
                     className="peer border-border  dark:placeholder:text-slate-500 dark:text-[#abc2d3] dark:border-slate-600 border rounded-md outline-none pl-10 pr-4 py-3 w-full focus:border-primary transition-colors duration-300"
                 />
             </div>
+             {
+                    error && <p className="text-sm text-red-500">{error}</p>
+                }
+               
 
          
             <AnimatedBtn label={"Login"}/>
             <p className="text-md font-semibold">Dont have any account ? <Link className="text-red-500" to={"/auth/Register"}>Register</Link></p>
-        </div>
+
+        </form>
             </div>
     );
 };
